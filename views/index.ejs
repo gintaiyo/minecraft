@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MINECRAFT UTILITY HUB</h1>
+            <p class="subtitle">SELECT A TOOL BELOW TO CALCULATE COORDINATES, MATERIALS, AND MECHANICS.</p>
+        </header>
+
+        <div class="tool-grid">
+            <% tools.forEach(tool => { %>
+                <a href="<%= tool.link %>" class="tool-card">
+                    <div class="tool-icon"><%= tool.icon %></div>
+                    <h2><%= tool.name %></h2>
+                    <p><%= tool.description %></p>
+                </a>
+            <% }); %>
+        </div>
+    </div>
+
+    <div class="mob-wrapper">
+        <div class="pixel-mob steve">
+            <div class="steve-head"></div>
+            <div class="steve-body"></div>
+            <div class="steve-legs"></div>
+        </div>
+
+        <div class="pixel-mob creeper">
+            <div class="creeper-head">
+                <div class="creeper-face"></div>
+            </div>
+        </div>
+
+        <div class="pixel-mob wolf">
+            <div class="wolf-body">
+                <div class="wolf-tail"></div>
+                <div class="wolf-head"></div>
+            </div>
+        </div>
+
+        <div class="pixel-mob cat">
+            <div class="cat-body">
+                <div class="cat-head">
+                    <div class="cat-eyes"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pixel-mob wither">
+            <div class="wither-center">
+                <div class="wither-head-side wither-head-left"></div>
+                <div class="wither-head-side wither-head-right"></div>
+            </div>
+            <div class="wither-ribs"></div>
+        </div>
+    </div>
+</body>
+</html>

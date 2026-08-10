@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="nav-link">BACK TO DASHBOARD</a>
+        <h2>BEACON PYRAMID PLANNER</h2>
+
+        <div class="form-group">
+            <label>SELECT PYRAMID LEVEL:</label>
+            <select id="level" onchange="calc()">
+                <option value="1">LEVEL 1 (3X3 BASE)</option>
+                <option value="2">LEVEL 2 (5X5 BASE)</option>
+                <option value="3">LEVEL 3 (7X7 BASE)</option>
+                <option value="4" selected>LEVEL 4 (9X9 BASE - FULL POWER)</option>
+            </select>
+        </div>
+
+        <div class="result-panel">
+            <h3>MATERIAL REQUIREMENTS</h3>
+            <div>TOTAL PYRAMID BLOCKS: <span id="totalBlocks">164</span></div>
+            <div>FULL STACKS: <span id="stacks">2.56</span></div>
+        </div>
+    </div>
+
+    <div class="mob-wrapper">
+        <div class="pixel-mob wither">
+            <div class="wither-center">
+                <div class="wither-head-side wither-head-left"></div>
+                <div class="wither-head-side wither-head-right"></div>
+            </div>
+            <div class="wither-ribs"></div>
+        </div>
+    </div>
+
+    <script>
+        function calc() {
+            const lvl = parseInt(document.getElementById('level').value);
+            const blocksPerLevel = [9, 25, 49, 81];
+            let total = 0;
+            for(let i = 0; i < lvl; i++) total += blocksPerLevel[i];
+
+            document.getElementById('totalBlocks').innerText = total;
+            document.getElementById('stacks').innerText = (total / 64).toFixed(2) + " STACKS";
+        }
+        calc();
+    </script>
+</body>
+</html>

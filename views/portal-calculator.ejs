@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="nav-link">BACK TO DASHBOARD</a>
+        <h2>NETHER PORTAL CALCULATOR</h2>
+
+        <div class="form-group">
+            <label for="dir">DIRECTION:</label>
+            <select id="dir" onchange="calc()">
+                <option value="owToNether">OVERWORLD TO NETHER</option>
+                <option value="netherToOw">NETHER TO OVERWORLD</option>
+            </select>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <div class="form-group" style="flex:1;">
+                <label>X:</label>
+                <input type="number" id="x" value="800" oninput="calc()">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>Y:</label>
+                <input type="number" id="y" value="64" oninput="calc()">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>Z:</label>
+                <input type="number" id="z" value="-320" oninput="calc()">
+            </div>
+        </div>
+
+        <div class="result-panel">
+            <h3>TARGET COORDINATES</h3>
+            <div>TARGET X: <span id="resX">100</span></div>
+            <div>TARGET Y: <span id="resY">64</span></div>
+            <div>TARGET Z: <span id="resZ">-40</span></div>
+        </div>
+    </div>
+
+    <div class="mob-wrapper">
+        <div class="pixel-mob steve">
+            <div class="steve-head"></div>
+            <div class="steve-body"></div>
+            <div class="steve-legs"></div>
+        </div>
+        <div class="pixel-mob creeper">
+            <div class="creeper-head">
+                <div class="creeper-face"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calc() {
+            const dir = document.getElementById('dir').value;
+            const x = parseFloat(document.getElementById('x').value) || 0;
+            const y = parseFloat(document.getElementById('y').value) || 0;
+            const z = parseFloat(document.getElementById('z').value) || 0;
+
+            const factor = dir === 'owToNether' ? 1/8 : 8;
+            document.getElementById('resX').innerText = Math.floor(x * factor);
+            document.getElementById('resY').innerText = y;
+            document.getElementById('resZ').innerText = Math.floor(z * factor);
+        }
+        calc();
+    </script>
+</body>
+</html>

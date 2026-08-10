@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="nav-link">BACK TO DASHBOARD</a>
+        <h2>MOB FARM YIELD ESTIMATOR</h2>
+
+        <div class="form-group">
+            <label>SPAWNER TYPE:</label>
+            <select id="type" onchange="calc()">
+                <option value="dungeon">DUNGEON SPAWNER (SINGLE)</option>
+                <option value="general">GENERAL MOB TOWER (FLUSH)</option>
+                <option value="enderman">ENDERMAN FARM (END-MITE)</option>
+            </select>
+        </div>
+
+        <div class="result-panel">
+            <h3>ESTIMATED RATES</h3>
+            <div>XP / HOUR: <span id="xp">30,000 XP</span></div>
+            <div>ITEMS / HOUR: <span id="items">1,200 ITEMS</span></div>
+        </div>
+    </div>
+
+    <div class="mob-wrapper">
+        <div class="pixel-mob creeper">
+            <div class="creeper-head">
+                <div class="creeper-face"></div>
+            </div>
+        </div>
+        <div class="pixel-mob wither">
+            <div class="wither-center">
+                <div class="wither-head-side wither-head-left"></div>
+                <div class="wither-head-side wither-head-right"></div>
+            </div>
+            <div class="wither-ribs"></div>
+        </div>
+    </div>
+
+    <script>
+        function calc() {
+            const val = document.getElementById('type').value;
+            if(val === 'dungeon') {
+                document.getElementById('xp').innerText = "~3,000 XP/HR";
+                document.getElementById('items').innerText = "~400 ITEMS/HR";
+            } else if(val === 'general') {
+                document.getElementById('xp').innerText = "~8,000 XP/HR";
+                document.getElementById('items').innerText = "~2,500 ITEMS/HR";
+            } else {
+                document.getElementById('xp').innerText = "~60,000 XP/HR";
+                document.getElementById('items').innerText = "~4,000 PEARLS/HR";
+            }
+        }
+        calc();
+    </script>
+</body>
+</html>

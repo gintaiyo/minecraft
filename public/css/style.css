@@ -1,0 +1,456 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+
+:root {
+    --mc-dirt-dark: #2f1d0e;
+    --mc-dirt-light: #482f18;
+    --mc-gui-bg: #c6c6c6;
+    --mc-gui-light: #ffffff;
+    --mc-gui-dark: #555555;
+    --mc-gui-shadow: #373737;
+    --mc-slot-bg: #8b8b8b;
+    --mc-slot-dark: #373737;
+    --mc-slot-light: #ffffff;
+    --mc-btn-bg: #707070;
+    --mc-btn-hover: #8b8b8b;
+    --mc-text-green: #55ff55;
+    --mc-text-yellow: #ffff55;
+    --mc-text-red: #ff5555;
+    --mc-text-aqua: #55ffff;
+}
+
+* {
+    box-sizing: border-box;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+body {
+    margin: 0;
+    padding: 28px 16px;
+    font-family: 'VT323', monospace;
+    background-color: var(--mc-dirt-dark);
+    background-image: 
+        linear-gradient(45deg, var(--mc-dirt-light) 25%, transparent 25%), 
+        linear-gradient(-45deg, var(--mc-dirt-light) 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, var(--mc-dirt-light) 75%), 
+        linear-gradient(-45deg, transparent 75%, var(--mc-dirt-light) 75%);
+    background-size: 32px 32px;
+    background-position: 0 0, 0 16px, 16px -16px, -16px 0px;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* MAIN GUI CONTAINER */
+.container {
+    width: 100%;
+    max-width: 920px;
+    background-color: var(--mc-gui-bg);
+    border: 4px solid var(--mc-gui-light);
+    border-right-color: var(--mc-gui-dark);
+    border-bottom-color: var(--mc-gui-dark);
+    outline: 4px solid #000;
+    box-shadow: 0 12px 0 rgba(0, 0, 0, 0.6);
+    padding: 24px;
+    color: #373737;
+    position: relative;
+    z-index: 10;
+}
+
+/* HEADER BANNER */
+header {
+    text-align: center;
+    margin-bottom: 24px;
+    background: #21150b;
+    border: 4px solid var(--mc-gui-dark);
+    border-right-color: var(--mc-gui-light);
+    border-bottom-color: var(--mc-gui-light);
+    outline: 2px solid #000;
+    padding: 20px 16px;
+    position: relative;
+}
+
+h1 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px;
+    color: var(--mc-text-yellow);
+    text-shadow: 3px 3px 0 #000;
+    margin: 0 0 10px 0;
+    line-height: 1.5;
+    letter-spacing: 1px;
+}
+
+p.subtitle {
+    font-size: 18px;
+    color: #e0e0e0;
+    text-shadow: 2px 2px 0 #000;
+    margin: 0;
+    line-height: 1.4;
+}
+
+h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 13px;
+    color: #202020;
+    text-shadow: 1px 1px 0 #a0a0a0;
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+/* NAVIGATION BUTTONS */
+.nav-link {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    display: inline-block;
+    padding: 12px 18px;
+    background: #3c8527;
+    color: #fff;
+    text-decoration: none;
+    border: 3px solid #55ff55;
+    border-right-color: #1e4313;
+    border-bottom-color: #1e4313;
+    outline: 2px solid #000;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 0 #000;
+    transition: background 0.1s;
+}
+
+.nav-link:hover {
+    background: #4ab230;
+}
+
+.nav-link:active {
+    border: 3px solid #1e4313;
+    border-right-color: #55ff55;
+    border-bottom-color: #55ff55;
+}
+
+/* DASHBOARD TOOL GRID */
+.tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.tool-card {
+    background: var(--mc-slot-bg);
+    border: 4px solid var(--mc-slot-dark);
+    border-right-color: var(--mc-slot-light);
+    border-bottom-color: var(--mc-slot-light);
+    outline: 2px solid #000;
+    padding: 16px;
+    text-decoration: none;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform 0.1s ease, background 0.1s ease;
+}
+
+.tool-card:hover {
+    background: #9e9e9e;
+    border-color: #ffffff;
+    border-right-color: var(--mc-slot-dark);
+    border-bottom-color: var(--mc-slot-dark);
+    transform: translateY(-2px);
+}
+
+.tool-card:active {
+    transform: translateY(0);
+    border: 4px solid var(--mc-slot-dark);
+    border-right-color: var(--mc-slot-light);
+    border-bottom-color: var(--mc-slot-light);
+}
+
+.tool-icon {
+    font-size: 28px;
+}
+
+.tool-card h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: #fff;
+    text-shadow: 2px 2px 0 #000;
+    margin: 0;
+}
+
+.tool-card p {
+    font-size: 18px;
+    color: #e0e0e0;
+    text-shadow: 1px 1px 0 #000;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* FORM ELEMENTS */
+.form-group {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: #202020;
+    margin-bottom: 8px;
+    text-shadow: 1px 1px 0 #a0a0a0;
+}
+
+input, select {
+    font-family: 'VT323', monospace;
+    font-size: 22px;
+    width: 100%;
+    padding: 8px 12px;
+    background: #000;
+    color: #fff;
+    border: 3px solid var(--mc-gui-dark);
+    border-right-color: var(--mc-gui-light);
+    border-bottom-color: var(--mc-gui-light);
+    outline: 2px solid #000;
+}
+
+input:focus, select:focus {
+    border-color: var(--mc-text-yellow);
+}
+
+/* RESULTS PANEL */
+.result-panel {
+    background: #000;
+    color: var(--mc-text-green);
+    border: 4px solid var(--mc-gui-dark);
+    border-right-color: var(--mc-gui-light);
+    border-bottom-color: var(--mc-gui-light);
+    outline: 2px solid #000;
+    padding: 18px;
+    font-size: 20px;
+    margin-top: 20px;
+    line-height: 1.8;
+}
+
+.result-panel h3 {
+    font-family: 'Press Start 2P', monospace;
+    color: #fff;
+    font-size: 10px;
+    text-shadow: none;
+    margin-top: 0;
+    margin-bottom: 12px;
+    border-bottom: 2px dashed #444;
+    padding-bottom: 8px;
+}
+
+/* ----------------------------------------------------
+   ANIMATED MINECRAFT MOBS
+---------------------------------------------------- */
+.mob-wrapper {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.pixel-mob {
+    position: absolute;
+    bottom: 12px;
+}
+
+/* 1. STEVE WALKING */
+.steve {
+    left: -60px;
+    animation: walkRight 20s linear infinite;
+}
+
+.steve-head {
+    width: 18px;
+    height: 18px;
+    background: #c68b59;
+    box-shadow: 
+        0 -4px 0 #4a2f13,
+        -4px 4px 0 #c68b59,
+        4px 4px 0 #000,
+        -2px 2px 0 #fff,
+        2px 2px 0 #fff;
+    margin: 0 auto;
+}
+
+.steve-body {
+    width: 18px;
+    height: 14px;
+    background: #00aaaa;
+    margin: 0 auto;
+}
+
+.steve-legs {
+    width: 14px;
+    height: 10px;
+    background: #0000aa;
+    margin: 0 auto;
+    animation: legSwing 0.4s steps(2) infinite;
+}
+
+/* 2. CREEPER SWELLING */
+.creeper {
+    right: 24px;
+    bottom: 16px;
+    animation: creeperSwell 2s ease-in-out infinite;
+}
+
+.creeper-head {
+    width: 28px;
+    height: 28px;
+    background: #55ff55;
+    border: 3px solid #00aa00;
+    position: relative;
+}
+
+.creeper-face {
+    width: 14px;
+    height: 14px;
+    background: #000;
+    margin: 7px auto;
+    box-shadow: 
+        -4px -2px 0 #000,
+        4px -2px 0 #000,
+        0 4px 0 #000;
+}
+
+/* 3. MC WOLF RUNNING */
+.wolf {
+    left: -140px;
+    animation: walkRight 15s linear infinite;
+    animation-delay: 4s;
+}
+
+.wolf-body {
+    width: 32px;
+    height: 18px;
+    background: #d0d0d0;
+    border: 2px solid #888;
+    position: relative;
+}
+
+.wolf-head {
+    width: 14px;
+    height: 14px;
+    background: #e0e0e0;
+    position: absolute;
+    top: -6px;
+    right: -6px;
+}
+
+.wolf-tail {
+    width: 6px;
+    height: 12px;
+    background: #b0b0b0;
+    position: absolute;
+    top: -2px;
+    left: -6px;
+    transform-origin: bottom right;
+    animation: tailWag 0.3s infinite alternate;
+}
+
+/* 4. MC CAT SITTING */
+.cat {
+    right: 90px;
+    bottom: 12px;
+}
+
+.cat-body {
+    width: 18px;
+    height: 22px;
+    background: #ffaa00;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    position: relative;
+}
+
+.cat-head {
+    width: 16px;
+    height: 12px;
+    background: #ffaa00;
+    position: absolute;
+    top: -10px;
+    left: 1px;
+}
+
+.cat-eyes {
+    width: 3px;
+    height: 3px;
+    background: #55ff55;
+    box-shadow: 7px 0 0 #55ff55;
+    margin: 3px 3px;
+    animation: catBlink 4s infinite;
+}
+
+/* 5. WITHER FLOATING */
+.wither {
+    top: -120px;
+    right: 12%;
+    animation: floatHover 3s ease-in-out infinite;
+}
+
+.wither-center {
+    width: 18px;
+    height: 18px;
+    background: #222;
+    border: 2px solid #555;
+    margin: 0 auto;
+    position: relative;
+}
+
+.wither-head-side {
+    width: 14px;
+    height: 14px;
+    background: #111;
+    border: 2px solid #444;
+    position: absolute;
+    top: 2px;
+}
+
+.wither-head-left { left: -16px; }
+.wither-head-right { right: -16px; }
+
+.wither-ribs {
+    width: 28px;
+    height: 18px;
+    border-left: 4px solid #333;
+    border-right: 4px solid #333;
+    margin: 2px auto;
+}
+
+/* ANIMATION KEYFRAMES */
+@keyframes walkRight {
+    0% { left: -80px; }
+    100% { left: 105vw; }
+}
+
+@keyframes legSwing {
+    0% { transform: skewX(-12deg); }
+    100% { transform: skewX(12deg); }
+}
+
+@keyframes creeperSwell {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.12); filter: brightness(1.3); }
+}
+
+@keyframes tailWag {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(25deg); }
+}
+
+@keyframes catBlink {
+    0%, 90%, 100% { opacity: 1; }
+    95% { opacity: 0; }
+}
+
+@keyframes floatHover {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-16px); }
+}

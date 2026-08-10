@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="nav-link">BACK TO DASHBOARD</a>
+        <h2>VILLAGER DISCOUNT TRACKER</h2>
+
+        <div class="form-group">
+            <label>BASE ITEM COST (EMERALDS):</label>
+            <input type="number" id="baseCost" value="24" oninput="calc()">
+        </div>
+        <div class="form-group">
+            <label>ZOMBIE CURES COMPLETED:</label>
+            <input type="number" id="cures" value="1" min="0" max="5" oninput="calc()">
+        </div>
+
+        <div class="result-panel">
+            <h3>DISCOUNTED PRICE</h3>
+            <div>FINAL PRICE: <span id="finalPrice">19</span> EMERALDS</div>
+        </div>
+    </div>
+
+    <div class="mob-wrapper">
+        <div class="pixel-mob wolf">
+            <div class="wolf-body">
+                <div class="wolf-tail"></div>
+                <div class="wolf-head"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calc() {
+            const base = parseInt(document.getElementById('baseCost').value) || 1;
+            const cures = parseInt(document.getElementById('cures').value) || 0;
+            const discount = cures * 5;
+            document.getElementById('finalPrice').innerText = Math.max(1, base - discount);
+        }
+        calc();
+    </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="nav-link">BACK TO DASHBOARD</a>
+        <h2>ENCHANTMENT OPTIMIZER</h2>
+
+        <div class="form-group">
+            <label>NUMBER OF ENCHANTMENT BOOKS:</label>
+            <input type="number" id="books" value="4" min="1" max="7" oninput="calc()">
+        </div>
+
+        <div class="result-panel">
+            <h3>COMBINING STRATEGY</h3>
+            <div id="treePlan">Combine in pairs (Book 1+2, Book 3+4), then combine results to avoid prior work penalty limit (39 levels).</div>
+        </div>
+    </div>
+
+    <div class="mob-wrapper">
+        <div class="pixel-mob steve">
+            <div class="steve-head"></div>
+            <div class="steve-body"></div>
+            <div class="steve-legs"></div>
+        </div>
+    </div>
+
+    <script>
+        function calc() {
+            const count = parseInt(document.getElementById('books').value) || 1;
+            document.getElementById('treePlan').innerText = `For ${count} enchantments: Group into pair-wise merges (1+2 and 3+4) before applying to item. Total penalties stay under 31 levels.`;
+        }
+        calc();
+    </script>
+</body>
+</html>

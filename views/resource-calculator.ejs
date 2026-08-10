@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="nav-link">BACK TO DASHBOARD</a>
+        <h2>BUILD RESOURCE CALCULATOR</h2>
+
+        <div class="form-group">
+            <label for="total">TOTAL ITEMS NEEDED:</label>
+            <input type="number" id="total" value="3456" oninput="calc()">
+        </div>
+
+        <div class="result-panel">
+            <h3>STORAGE REQUIREMENTS</h3>
+            <div>FULL STACKS (64S): <span id="stacks">54</span></div>
+            <div>SHULKER BOXES: <span id="shulkers">2</span></div>
+            <div>DOUBLE CHESTS: <span id="chests">1.0</span></div>
+            <div>REMAINDER: <span id="rem">0</span> ITEMS</div>
+        </div>
+    </div>
+
+    <div class="mob-wrapper">
+        <div class="pixel-mob cat">
+            <div class="cat-body">
+                <div class="cat-head">
+                    <div class="cat-eyes"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calc() {
+            const total = parseInt(document.getElementById('total').value) || 0;
+            const stacks = Math.floor(total / 64);
+            const rem = total % 64;
+            const shulkers = Math.floor(stacks / 27);
+            const chests = (stacks / 54).toFixed(1);
+
+            document.getElementById('stacks').innerText = stacks;
+            document.getElementById('shulkers').innerText = shulkers;
+            document.getElementById('chests').innerText = chests;
+            document.getElementById('rem').innerText = rem;
+        }
+        calc();
+    </script>
+</body>
+</html>
