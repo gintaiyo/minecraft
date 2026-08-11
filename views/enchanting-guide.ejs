@@ -61,7 +61,6 @@
         <a href="/" class="nav-link">BACK TO DASHBOARD</a>
         <h2>ENCHANTMENT ORDER OPTIMIZER</h2>
 
-        <!-- STEP 1: SELECT ITEM -->
         <div class="form-group">
             <label for="itemSelect">1. SELECT WEAPON / TOOL / ARMOR:</label>
             <select id="itemSelect" onchange="loadEnchantments()">
@@ -79,14 +78,12 @@
             </select>
         </div>
 
-        <!-- STEP 2: SELECT ENCHANTMENTS -->
         <div class="form-group">
             <label>2. SELECT DESIRED ENCHANTMENTS:</label>
             <div class="enchant-grid" id="enchantOptions"></div>
             <div class="conflict-warning" id="conflictAlert"></div>
         </div>
 
-        <!-- STEP 3: RESULT AND ANVIL ORDER -->
         <div class="result-panel">
             <h3>CHEAPEST ANVIL COMBINATION TREE</h3>
             <div id="combinationSteps">Select enchantments above to calculate the optimal order.</div>
@@ -242,7 +239,6 @@
             const alertBox = document.getElementById("conflictAlert");
             const item = document.getElementById("itemSelect").value;
 
-            // Special Trident Conflict Logic: Loyalty + Channeling CAN co-exist, but Riptide conflicts with both
             if (changedCb.checked && item === 'trident') {
                 const changedId = changedCb.getAttribute('data-id');
                 if (changedId === 'riptide') {
@@ -258,7 +254,6 @@
                     }
                 }
             } else if (changedCb.checked && group) {
-                // Standard Mutual Exclusion Groups (e.g. Sharpness vs Smite, Fortune vs Silk Touch)
                 const checkboxes = document.querySelectorAll('#enchantOptions input[type="checkbox"]');
 
                 checkboxes.forEach(cb => {
