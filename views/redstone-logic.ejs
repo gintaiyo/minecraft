@@ -8,44 +8,153 @@
 <body>
     <div class="container">
         <a href="/" class="nav-link">BACK TO DASHBOARD</a>
-        <h2>REDSTONE SIGNAL CALCULATOR</h2>
+        <h2>REDSTONE COMPARATOR & WIRE CALCULATOR</h2>
 
         <div class="form-group">
-            <label>INITIAL SIGNAL STRENGTH (1-15):</label>
-            <input type="number" id="sig" value="15" min="1" max="15" oninput="calc()">
+            <label>MODE:</label>
+            <select id="mode" onchange="toggleMode()">
+                <option value="container">CONTAINER TO COMPARATOR SIGNAL</option>
+                <option value="wire">WIRE SIGNAL DECAY & REPEATERS</option>
+            </select>
         </div>
-        <div class="form-group">
-            <label>DUST DISTANCE (BLOCKS):</label>
-            <input type="number" id="dist" value="20" min="0" oninput="calc()">
+
+        <!-- CONTAINER CALCULATOR -->
+        <div id="containerSection">
+            <div class="form-group">
+                <label>CONTAINER TYPE:</label>
+                <select id="containerType" onchange="calcContainer()">
+                    <option value="54">DOUBLE CHEST (54 SLOTS)</option>
+                    <option value="27" selected>SINGLE CHEST / BARREL / SHULKER (27 SLOTS)</option>
+                    <option value="5">HOPPER (5 SLOTS)</option>
+                    <option value="3">FURNACE / BREWING STAND (3 SLOTS)</option>
+                    <option value="15">LECTERN (15 PAGES)</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex:1;">
+                    <label>FILLED SLOTS / PAGES:</label>
+                    <input type="number" id="filledSlots" value="14" min="0" oninput="calcContainer()">
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>AVG STACK FRACTION (0.0 - 1.0):</label>
+                    <input type="number" id="fillRatio" value="1.0" step="0.1" min="0" max="1" oninput="calcContainer()">
+                </div>
+            </div>
+        </div>
+
+        <!-- WIRE CALCULATOR -->
+        <div id="wireSection" style="display: none;">
+            <div style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex:1;">
+                    <label>INITIAL POWER (1-15):</label>
+                    <input type="number" id="initialPower" value="15" min="1" max="15" oninput="calcWire()">
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>DUST LENGTH (BLOCKS):</label>
+                    <input type="number" id="wireDist" value="28" min="0" oninput="calcWire()">
+                </div>
+            </div>
         </div>
 
         <div class="result-panel">
-            <h3>SIGNAL OUTPUT</h3>
-            <div>REMAINING POWER: <span id="remPower">0</span></div>
-            <div>REPEATERS REQUIRED: <span id="repNeeded">1</span></div>
+            <h3>CALCULATED OUTPUT</h3>
+            <div id="resContainer">
+                <div>COMPARATOR SIGNAL STRENGTH: <span id="compSignal" style="color:var(--mc-text-yellow)">8</span> / 15</div>
+                <div>FULLNESS PERCENTAGE: <span id="fullnessPct">51.8%</span></div>
+                <div>ITEMS NEEDED FOR NEXT SIGNAL LEVEL: <span id="nextLevelItems">34</span> ITEMS</div>
+            </div>
+            <div id="resWire" style="display: none;">
+                <div>END SIGNAL STRENGTH: <span id="endSignal" style="color:var(--mc-text-yellow)">2</span> / 15</div>
+                <div>REPEATERS NEEDED: <span id="repeatersNeeded">1</span></div>
+                <div>TOTAL DELAY: <span id="totalDelay">1 TICKS (0.1s)</span></div>
+            </div>
         </div>
     </div>
 
     <div class="mob-wrapper">
         <div class="pixel-mob creeper">
-            <div class="creeper-head">
-                <div class="creeper-face"></div>
-            </div>
+            <div class="c-head"><div class="c-face"></div></div>
+            <div class="c-body"></div>
+            <div class="c-feet"><div class="c-foot"></div><div class="c-foot"></div></div>
         </div>
     </div>
 
     <script>
-        function calc() {
-            const sig = parseInt(document.getElementById('sig').value) || 15;
-            const dist = parseInt(document.getElementById('dist').value) || 0;
+        function toggleMode() {
+            const mode = document.getElementById('mode').value;
+            const containerSec = document.getElementById('containerSection');
+            const wireSec = document.getElementById('wireSection');
+            const resContainer = document.getElementById('resContainer');
+            const resWire = document.getElementById('resWire');
 
-            const remaining = Math.max(0, sig - dist);
-            const repeaters = Math.floor(dist / 15);
-
-            document.getElementById('remPower').innerText = remaining;
-            document.getElementById('repNeeded').innerText = repeaters;
+            if (mode === 'container') {
+                containerSec.style.display = 'block';
+                wireSec.style.display = 'none';
+                resContainer.style.display = 'block';
+                resWire.style.display = 'none';
+                calcContainer();
+            } else {
+                containerSec.style.display = 'none';
+                wireSec.style.display = 'block';
+                resContainer.style.display = 'none';
+                resWire.style.display = 'block';
+                calcWire();
+            }
         }
-        calc();
+
+        function calcContainer() {
+            const totalSlots = parseInt(document.getElementById('containerType').value);
+            const filledSlots = Math.min(totalSlots, parseInt(document.getElementById('filledSlots').value) || 0);
+            const ratio = parseFloat(document.getElementById('fillRatio').value) || 0;
+
+            const totalCapacity = totalSlots * 64;
+            const currentItems = Math.floor(filledSlots * 64 * ratio);
+            
+            let signal = 0;
+            if (currentItems > 0) {
+                signal = Math.floor(1 + (currentItems / totalCapacity) * 14);
+            }
+
+            const pct = ((currentItems / totalCapacity) * 100).toFixed(1);
+
+            let nextItems = 0;
+            if (signal < 15) {
+                const targetItems = Math.ceil(((signal) / 14) * totalCapacity);
+                nextItems = Math.max(0, targetItems - currentItems);
+            }
+
+            document.getElementById('compSignal').innerText = signal;
+            document.getElementById('fullnessPct').innerText = pct + '%';
+            document.getElementById('nextLevelItems').innerText = nextItems;
+        }
+
+        function calcWire() {
+            const init = parseInt(document.getElementById('initialPower').value) || 15;
+            const dist = parseInt(document.getElementById('wireDist').value) || 0;
+
+            let currentPower = init;
+            let repeaters = 0;
+
+            for (let i = 0; i < dist; i++) {
+                if (currentPower === 1 && i < dist - 1) {
+                    repeaters++;
+                    currentPower = 15;
+                } else {
+                    currentPower--;
+                }
+            }
+
+            const finalPower = Math.max(0, currentPower);
+            const delayTicks = repeaters * 1;
+            const delaySec = (delayTicks * 0.1).toFixed(1);
+
+            document.getElementById('endSignal').innerText = finalPower;
+            document.getElementById('repeatersNeeded').innerText = repeaters;
+            document.getElementById('totalDelay').innerText = `${delayTicks} TICKS (${delaySec}s)`;
+        }
+
+        calcContainer();
     </script>
 </body>
 </html>

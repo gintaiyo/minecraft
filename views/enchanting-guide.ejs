@@ -4,37 +4,362 @@
     <meta charset="UTF-8">
     <title><%= title %></title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .enchant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+            background: #111;
+            padding: 12px;
+            border: 3px solid var(--mc-gui-dark);
+        }
+        .enchant-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+            border: 1px solid transparent;
+        }
+        .enchant-item:hover {
+            background: #222;
+        }
+        .enchant-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .conflict-warning {
+            display: none;
+            background: #380000;
+            color: var(--mc-text-red);
+            border: 2px solid #ff5555;
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+        .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+        }
+        .step-list li {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            font-size: 18px;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <a href="/" class="nav-link">BACK TO DASHBOARD</a>
-        <h2>ENCHANTMENT OPTIMIZER</h2>
+        <h2>ENCHANTMENT ORDER OPTIMIZER</h2>
 
+        <!-- STEP 1: SELECT ITEM -->
         <div class="form-group">
-            <label>NUMBER OF ENCHANTMENT BOOKS:</label>
-            <input type="number" id="books" value="4" min="1" max="7" oninput="calc()">
+            <label for="itemSelect">1. SELECT WEAPON / TOOL / ARMOR:</label>
+            <select id="itemSelect" onchange="loadEnchantments()">
+                <option value="sword">SWORD</option>
+                <option value="axe">AXE</option>
+                <option value="mace">MACE</option>
+                <option value="spear">SPEAR</option>
+                <option value="trident">TRIDENT</option>
+                <option value="pickaxe">PICKAXE / SHOVEL / HOE</option>
+                <option value="bow">BOW</option>
+                <option value="crossbow">CROSSBOW</option>
+                <option value="helmet">HELMET</option>
+                <option value="chestplate">CHESTPLATE / LEGGINGS</option>
+                <option value="boots">BOOTS</option>
+            </select>
         </div>
 
+        <!-- STEP 2: SELECT ENCHANTMENTS -->
+        <div class="form-group">
+            <label>2. SELECT DESIRED ENCHANTMENTS:</label>
+            <div class="enchant-grid" id="enchantOptions"></div>
+            <div class="conflict-warning" id="conflictAlert"></div>
+        </div>
+
+        <!-- STEP 3: RESULT AND ANVIL ORDER -->
         <div class="result-panel">
-            <h3>COMBINING STRATEGY</h3>
-            <div id="treePlan">Combine in pairs (Book 1+2, Book 3+4), then combine results to avoid prior work penalty limit (39 levels).</div>
+            <h3>CHEAPEST ANVIL COMBINATION TREE</h3>
+            <div id="combinationSteps">Select enchantments above to calculate the optimal order.</div>
+
+            <div style="margin-top: 16px; border-top: 2px dashed #444; padding-top: 12px;">
+                <div>TOTAL ENCHANTMENTS: <span id="totalCount" style="color:var(--mc-text-yellow)">0</span></div>
+                <div>ESTIMATED TOTAL XP COST: <span id="totalXp" style="color:var(--mc-text-green)">0 LEVELS</span></div>
+                <div>MAX PRIOR WORK PENALTY: <span id="penaltyCap">0 ANVIL USES</span></div>
+                <div>STATUS: <span id="statusText" style="color:var(--mc-text-green)">OPTIMAL</span></div>
+            </div>
         </div>
     </div>
 
     <div class="mob-wrapper">
-        <div class="pixel-mob steve">
-            <div class="steve-head"></div>
-            <div class="steve-body"></div>
-            <div class="steve-legs"></div>
+        <div class="pixel-mob wolf">
+            <div class="w-main">
+                <div class="w-body"><div class="w-tail"></div><div class="w-collar"></div></div>
+                <div class="w-head"><div class="w-ears"></div><div class="w-snout"><div class="w-nose"></div></div></div>
+            </div>
+            <div class="w-legs"><div class="w-leg"></div><div class="w-leg"></div><div class="w-leg"></div><div class="w-leg"></div></div>
         </div>
     </div>
 
     <script>
-        function calc() {
-            const count = parseInt(document.getElementById('books').value) || 1;
-            document.getElementById('treePlan').innerText = `For ${count} enchantments: Group into pair-wise merges (1+2 and 3+4) before applying to item. Total penalties stay under 31 levels.`;
+        const enchantmentsData = {
+            sword: [
+                { id: "sharpness", name: "Sharpness V", cost: 5, group: "damage" },
+                { id: "smite", name: "Smite V", cost: 5, group: "damage" },
+                { id: "bane", name: "Bane of Arthropods V", cost: 5, group: "damage" },
+                { id: "unbreaking", name: "Unbreaking III", cost: 3 },
+                { id: "mending", name: "Mending", cost: 2 },
+                { id: "looting", name: "Looting III", cost: 6 },
+                { id: "fire_aspect", name: "Fire Aspect II", cost: 4 },
+                { id: "sweeping", name: "Sweeping Edge III", cost: 6 },
+                { id: "knockback", name: "Knockback II", cost: 2 }
+            ],
+            axe: [
+                { id: "efficiency", name: "Efficiency V", cost: 5 },
+                { id: "sharpness", name: "Sharpness V", cost: 5, group: "damage" },
+                { id: "smite", name: "Smite V", cost: 5, group: "damage" },
+                { id: "bane", name: "Bane of Arthropods V", cost: 5, group: "damage" },
+                { id: "unbreaking", name: "Unbreaking III", cost: 3 },
+                { id: "mending", name: "Mending", cost: 2 },
+                { id: "fortune", name: "Fortune III", cost: 6, group: "minedrop" },
+                { id: "silk_touch", name: "Silk Touch", cost: 4, group: "minedrop" }
+            ],
+            mace: [
+                { id: "density", name: "Density V", cost: 5, group: "mace_damage" },
+                { id: "breach", name: "Breach IV", cost: 8, group: "mace_damage" },
+                { id: "smite", name: "Smite V", cost: 5, group: "mace_damage" },
+                { id: "bane", name: "Bane of Arthropods V", cost: 5, group: "mace_damage" },
+                { id: "wind_burst", name: "Wind Burst III", cost: 6 },
+                { id: "fire_aspect", name: "Fire Aspect II", cost: 4 },
+                { id: "unbreaking", name: "Unbreaking III", cost: 3 },
+                { id: "mending", name: "Mending", cost: 2 }
+            ],
+            spear: [
+                { id: "lunge", name: "Lunge III", cost: 6 },
+                { id: "sharpness", name: "Sharpness V", cost: 5, group: "spear_damage" },
+                { id: "smite", name: "Smite V", cost: 5, group: "spear_damage" },
+                { id: "bane", name: "Bane of Arthropods V", cost: 5, group: "spear_damage" },
+                { id: "looting", name: "Looting III", cost: 6 },
+                { id: "fire_aspect", name: "Fire Aspect II", cost: 4 },
+                { id: "knockback", name: "Knockback II", cost: 2 },
+                { id: "unbreaking", name: "Unbreaking III", cost: 3 },
+                { id: "mending", name: "Mending", cost: 2 }
+            ],
+            trident: [
+                { id: "loyalty", name: "Loyalty III", cost: 3, group: "trident_riptide" },
+                { id: "channeling", name: "Channeling", cost: 4, group: "trident_riptide" },
+                { id: "riptide", name: "Riptide III", cost: 6, group: "trident_riptide" },
+                { id: "impaling", name: "Impaling V", cost: 5 },
+                { id: "unbreaking", name: "Unbreaking III", cost: 3 },
+                { id: "mending", name: "Mending", cost: 2 }
+            ],
+            pickaxe: [
+                { id: "efficiency", name: "Efficiency V", cost: 5 },
+                { id: "unbreaking", name: "Unbreaking III", cost: 3 },
+                { id: "mending", name: "Mending", cost: 2 },
+                { id: "fortune", name: "Fortune III", cost: 6, group: "minedrop" },
+                { id: "silk_touch", name: "Silk Touch", cost: 4, group: "minedrop" }
+            ],
+            bow: [
+                { id: "power", name: "Power V", cost: 5 },
+                { id: "unbreaking", name: "Unbreaking III", cost: 3 },
+                { id: "flame", name: "Flame", cost: 2 },
+                { id: "infinity", name: "Infinity", cost: 8, group: "bow_ammo" },
+                { id: "mending", name: "Mending", cost: 2, group: "bow_ammo" },
+                { id: "punch", name: "Punch II", cost: 4 }
+            ],
+            crossbow: [
+                { id: "quick_charge", name: "Quick Charge III", cost: 6 },
+                { id: "multishot", name: "Multishot", cost: 4, group: "shot_type" },
+                { id: "piercing", name: "Piercing IV", cost: 8, group: "shot_type" },
+                { id: "unbreaking", name: "Unbreaking III", cost: 3 },
+                { id: "mending", name: "Mending", cost: 2 }
+            ],
+            helmet: [
+                { id: "protection", name: "Protection IV", cost: 4, group: "protection" },
+                { id: "fire_prot", name: "Fire Protection IV", cost: 4, group: "protection" },
+                { id: "blast_prot", name: "Blast Protection IV", cost: 4, group: "protection" },
+                { id: "proj_prot", name: "Projectile Protection IV", cost: 4, group: "protection" },
+                { id: "unbreaking", name: "Unbreaking III", cost: 3 },
+                { id: "mending", name: "Mending", cost: 2 },
+                { id: "respiration", name: "Respiration III", cost: 6 },
+                { id: "aqua_affinity", name: "Aqua Affinity", cost: 2 },
+                { id: "thorns", name: "Thorns III", cost: 12 }
+            ],
+            chestplate: [
+                { id: "protection", name: "Protection IV", cost: 4, group: "protection" },
+                { id: "fire_prot", name: "Fire Protection IV", cost: 4, group: "protection" },
+                { id: "blast_prot", name: "Blast Protection IV", cost: 4, group: "protection" },
+                { id: "proj_prot", name: "Projectile Protection IV", cost: 4, group: "protection" },
+                { id: "unbreaking", name: "Unbreaking III", cost: 3 },
+                { id: "mending", name: "Mending", cost: 2 },
+                { id: "thorns", name: "Thorns III", cost: 12 }
+            ],
+            boots: [
+                { id: "protection", name: "Protection IV", cost: 4, group: "protection" },
+                { id: "fire_prot", name: "Fire Protection IV", cost: 4, group: "protection" },
+                { id: "blast_prot", name: "Blast Protection IV", cost: 4, group: "protection" },
+                { id: "proj_prot", name: "Projectile Protection IV", cost: 4, group: "protection" },
+                { id: "unbreaking", name: "Unbreaking III", cost: 3 },
+                { id: "mending", name: "Mending", cost: 2 },
+                { id: "feather_falling", name: "Feather Falling IV", cost: 4 },
+                { id: "depth_strider", name: "Depth Strider III", cost: 6, group: "water_move" },
+                { id: "frost_walker", name: "Frost Walker II", cost: 4, group: "water_move" },
+                { id: "soul_speed", name: "Soul Speed III", cost: 6 }
+            ]
+        };
+
+        function loadEnchantments() {
+            const item = document.getElementById("itemSelect").value;
+            const container = document.getElementById("enchantOptions");
+            container.innerHTML = "";
+
+            enchantmentsData[item].forEach((ench) => {
+                const div = document.createElement("label");
+                div.className = "enchant-item";
+                div.innerHTML = `
+                    <input type="checkbox" id="ench_${ench.id}" value="${ench.cost}" data-id="${ench.id}" data-group="${ench.group || ''}" data-name="${ench.name}" onchange="handleEnchantSelection(this)">
+                    ${ench.name}
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById("conflictAlert").style.display = "none";
+            calculateOptimalTree();
         }
-        calc();
+
+        function handleEnchantSelection(changedCb) {
+            const group = changedCb.getAttribute('data-group');
+            const alertBox = document.getElementById("conflictAlert");
+            const item = document.getElementById("itemSelect").value;
+
+            // Special Trident Conflict Logic: Loyalty + Channeling CAN co-exist, but Riptide conflicts with both
+            if (changedCb.checked && item === 'trident') {
+                const changedId = changedCb.getAttribute('data-id');
+                if (changedId === 'riptide') {
+                    document.getElementById('ench_loyalty').checked = false;
+                    document.getElementById('ench_channeling').checked = false;
+                    alertBox.innerText = `⚠️ CONFLICT: [Riptide III] cannot be combined with [Loyalty III] or [Channeling] on a Trident! Deselected both.`;
+                    alertBox.style.display = "block";
+                } else if (changedId === 'loyalty' || changedId === 'channeling') {
+                    if (document.getElementById('ench_riptide').checked) {
+                        document.getElementById('ench_riptide').checked = false;
+                        alertBox.innerText = `⚠️ CONFLICT: [Riptide III] cannot be combined with [${changedCb.getAttribute('data-name')}] on a Trident! Deselected [Riptide III].`;
+                        alertBox.style.display = "block";
+                    }
+                }
+            } else if (changedCb.checked && group) {
+                // Standard Mutual Exclusion Groups (e.g. Sharpness vs Smite, Fortune vs Silk Touch)
+                const checkboxes = document.querySelectorAll('#enchantOptions input[type="checkbox"]');
+
+                checkboxes.forEach(cb => {
+                    if (cb !== changedCb && cb.getAttribute('data-group') === group && cb.checked) {
+                        cb.checked = false;
+                        const firstName = changedCb.getAttribute('data-name');
+                        const secondName = cb.getAttribute('data-name');
+                        
+                        alertBox.innerText = `⚠️ CONFLICT: [${firstName}] and [${secondName}] cannot be applied together in Minecraft! Deselected [${secondName}].`;
+                        alertBox.style.display = "block";
+                    }
+                });
+            } else if (!document.querySelectorAll('#enchantOptions input[type="checkbox"]:checked').length) {
+                alertBox.style.display = "none";
+            }
+
+            calculateOptimalTree();
+        }
+
+        function calculateOptimalTree() {
+            const checkboxes = document.querySelectorAll('#enchantOptions input[type="checkbox"]:checked');
+            const itemType = document.getElementById("itemSelect").options[document.getElementById("itemSelect").selectedIndex].text;
+            const selected = [];
+
+            checkboxes.forEach(cb => {
+                selected.push({
+                    name: cb.getAttribute('data-name'),
+                    cost: parseInt(cb.value)
+                });
+            });
+
+            selected.sort((a, b) => b.cost - a.cost);
+
+            const totalCount = selected.length;
+            document.getElementById("totalCount").innerText = totalCount;
+
+            if (totalCount === 0) {
+                document.getElementById("combinationSteps").innerHTML = "Select enchantments above to calculate the optimal order.";
+                document.getElementById("totalXp").innerText = "0 LEVELS";
+                document.getElementById("penaltyCap").innerText = "0 ANVIL USES";
+                document.getElementById("statusText").innerText = "OPTIMAL";
+                document.getElementById("statusText").style.color = "var(--mc-text-green)";
+                return;
+            }
+
+            let stepsHTML = '<ul class="step-list">';
+            let estimatedXp = 0;
+            let maxUses = Math.ceil(Math.log2(totalCount + 1));
+
+            if (totalCount === 1) {
+                stepsHTML += `<li>1. Combine <strong>[${itemType}]</strong> + <strong>[Book: ${selected[0].name}]</strong> in Anvil.</li>`;
+                estimatedXp = selected[0].cost + 1;
+            } else {
+                let bookGroups = [];
+                for (let i = 0; i < totalCount; i += 2) {
+                    if (i + 1 < totalCount) {
+                        stepsHTML += `<li>Step ${bookGroups.length + 1}: Combine <strong>[${selected[i].name}]</strong> + <strong>[${selected[i + 1].name}]</strong> ➔ (Combined Book ${bookGroups.length + 1})</li>`;
+                        bookGroups.push(`Combined Book ${bookGroups.length + 1}`);
+                        estimatedXp += selected[i].cost + selected[i + 1].cost + 2;
+                    } else {
+                        bookGroups.push(`[${selected[i].name}]`);
+                    }
+                }
+
+                let stepNum = bookGroups.length + 1;
+                while (bookGroups.length > 1) {
+                    let nextGroups = [];
+                    for (let i = 0; i < bookGroups.length; i += 2) {
+                        if (i + 1 < bookGroups.length) {
+                            stepsHTML += `<li>Step ${stepNum}: Combine <strong>${bookGroups[i]}</strong> + <strong>${bookGroups[i + 1]}</strong> ➔ (Master Book ${nextGroups.length + 1})</li>`;
+                            nextGroups.push(`Master Book ${nextGroups.length + 1}`);
+                            stepNum++;
+                            estimatedXp += 6;
+                        } else {
+                            nextGroups.push(bookGroups[i]);
+                        }
+                    }
+                    bookGroups = nextGroups;
+                }
+
+                stepsHTML += `<li>Step ${stepNum}: Apply <strong>${bookGroups[0]}</strong> to <strong>[${itemType}]</strong>.</li>`;
+                estimatedXp += 8;
+            }
+
+            stepsHTML += '</ul>';
+
+            document.getElementById("combinationSteps").innerHTML = stepsHTML;
+            document.getElementById("totalXp").innerText = `~${estimatedXp} LEVELS`;
+            document.getElementById("penaltyCap").innerText = `${maxUses} ANVIL USES MAX`;
+
+            const status = document.getElementById("statusText");
+            if (totalCount > 6) {
+                status.innerText = "WARNING: HIGH XP PENALTY RISK. FOLLOW TREE EXACTLY!";
+                status.style.color = "var(--mc-text-yellow)";
+            } else {
+                status.innerText = "OPTIMAL (SAFE FROM 'TOO EXPENSIVE!' CAP)";
+                status.style.color = "var(--mc-text-green)";
+            }
+        }
+
+        loadEnchantments();
     </script>
 </body>
 </html>

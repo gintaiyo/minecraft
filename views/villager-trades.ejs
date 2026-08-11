@@ -8,40 +8,77 @@
 <body>
     <div class="container">
         <a href="/" class="nav-link">BACK TO DASHBOARD</a>
-        <h2>VILLAGER DISCOUNT TRACKER</h2>
+        <h2>VILLAGER TRADE DISCOUNT CALCULATOR</h2>
 
         <div class="form-group">
-            <label>BASE ITEM COST (EMERALDS):</label>
-            <input type="number" id="baseCost" value="24" oninput="calc()">
+            <label>BASE TRADE PRICE (EMERALDS / ITEMS):</label>
+            <input type="number" id="basePrice" value="32" min="1" max="64" oninput="calcTrade()">
         </div>
-        <div class="form-group">
-            <label>ZOMBIE CURES COMPLETED:</label>
-            <input type="number" id="cures" value="1" min="0" max="5" oninput="calc()">
+
+        <div style="display: flex; gap: 10px;">
+            <div class="form-group" style="flex:1;">
+                <label>ZOMBIE CURES (JAVA / BEDROCK):</label>
+                <input type="number" id="cures" value="1" min="0" max="5" oninput="calcTrade()">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>HERO OF THE VILLAGE BUFF LEVEL:</label>
+                <select id="heroLevel" onchange="calcTrade()">
+                    <option value="0">NONE</option>
+                    <option value="1">HERO OF THE VILLAGE I (30% DISCOUNT)</option>
+                    <option value="2">HERO OF THE VILLAGE II (36% DISCOUNT)</option>
+                    <option value="3">HERO OF THE VILLAGE III (41% DISCOUNT)</option>
+                    <option value="5">HERO OF THE VILLAGE V (55% DISCOUNT)</option>
+                </select>
+            </div>
         </div>
 
         <div class="result-panel">
-            <h3>DISCOUNTED PRICE</h3>
-            <div>FINAL PRICE: <span id="finalPrice">19</span> EMERALDS</div>
+            <h3>FINAL TRADE COST</h3>
+            <div>DISCOUNTED PRICE: <span id="finalEmeralds" style="color:var(--mc-text-yellow)">1</span> EMERALD(S)</div>
+            <div>SAVINGS PERCENTAGE: <span id="savingsPct">96.8%</span></div>
+            <div>TOTAL EMERALDS SAVED PER STACK: <span id="savedPerStack">1,984</span> EMERALDS</div>
         </div>
     </div>
 
     <div class="mob-wrapper">
-        <div class="pixel-mob wolf">
-            <div class="wolf-body">
-                <div class="wolf-tail"></div>
-                <div class="wolf-head"></div>
+        <div class="pixel-mob wither">
+            <div class="w-heads">
+                <div class="w-head side"><div class="w-eyes"></div></div>
+                <div class="w-head main"><div class="w-eyes"></div></div>
+                <div class="w-head side"><div class="w-eyes"></div></div>
             </div>
+            <div class="w-bar"></div>
+            <div class="w-ribs"></div>
         </div>
     </div>
 
     <script>
-        function calc() {
-            const base = parseInt(document.getElementById('baseCost').value) || 1;
+        function calcTrade() {
+            const base = parseInt(document.getElementById('basePrice').value) || 1;
             const cures = parseInt(document.getElementById('cures').value) || 0;
-            const discount = cures * 5;
-            document.getElementById('finalPrice').innerText = Math.max(1, base - discount);
+            const heroLevel = parseInt(document.getElementById('heroLevel').value) || 0;
+
+            // Cure discount = 5 emeralds per cure stage
+            const cureDiscount = cures * 5;
+
+            // Hero of the Village discount multiplier
+            let heroDiscountPct = 0;
+            if (heroLevel > 0) {
+                heroDiscountPct = 0.30 + (heroLevel - 1) * 0.06;
+            }
+
+            let priceAfterCure = Math.max(1, base - cureDiscount);
+            let finalPrice = Math.max(1, Math.floor(priceAfterCure * (1 - heroDiscountPct)));
+
+            const pctSaved = (((base - finalPrice) / base) * 100).toFixed(1);
+            const savedPerStack = (base - finalPrice) * 64;
+
+            document.getElementById('finalEmeralds').innerText = finalPrice;
+            document.getElementById('savingsPct').innerText = pctSaved + '%';
+            document.getElementById('savedPerStack').innerText = savedPerStack;
         }
-        calc();
+
+        calcTrade();
     </script>
 </body>
 </html>

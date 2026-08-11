@@ -1,20 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
 
 :root {
-    --mc-dirt-dark: #2f1d0e;
-    --mc-dirt-light: #482f18;
+    --mc-dirt-dark: #27190d;
+    --mc-dirt-light: #3e2714;
     --mc-gui-bg: #c6c6c6;
     --mc-gui-light: #ffffff;
     --mc-gui-dark: #555555;
-    --mc-gui-shadow: #373737;
+    --mc-gui-shadow: #222222;
     --mc-slot-bg: #8b8b8b;
     --mc-slot-dark: #373737;
     --mc-slot-light: #ffffff;
-    --mc-btn-bg: #707070;
-    --mc-btn-hover: #8b8b8b;
     --mc-text-green: #55ff55;
     --mc-text-yellow: #ffff55;
-    --mc-text-red: #ff5555;
     --mc-text-aqua: #55ffff;
 }
 
@@ -24,9 +21,23 @@
     image-rendering: crisp-edges;
 }
 
+/* CUSTOM SCROLLBAR */
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    background: #000;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--mc-gui-bg);
+    border: 2px solid var(--mc-gui-light);
+    border-right-color: var(--mc-gui-dark);
+    border-bottom-color: var(--mc-gui-dark);
+}
+
 body {
     margin: 0;
-    padding: 28px 16px;
+    padding: 30px 16px;
     font-family: 'VT323', monospace;
     background-color: var(--mc-dirt-dark);
     background-image: 
@@ -48,14 +59,14 @@ body {
 /* MAIN GUI CONTAINER */
 .container {
     width: 100%;
-    max-width: 920px;
+    max-width: 960px;
     background-color: var(--mc-gui-bg);
     border: 4px solid var(--mc-gui-light);
     border-right-color: var(--mc-gui-dark);
     border-bottom-color: var(--mc-gui-dark);
     outline: 4px solid #000;
-    box-shadow: 0 12px 0 rgba(0, 0, 0, 0.6);
-    padding: 24px;
+    box-shadow: 0 16px 0 rgba(0, 0, 0, 0.75);
+    padding: 28px;
     color: #373737;
     position: relative;
     z-index: 10;
@@ -65,18 +76,17 @@ body {
 header {
     text-align: center;
     margin-bottom: 24px;
-    background: #21150b;
+    background: #140d07;
     border: 4px solid var(--mc-gui-dark);
     border-right-color: var(--mc-gui-light);
     border-bottom-color: var(--mc-gui-light);
     outline: 2px solid #000;
     padding: 20px 16px;
-    position: relative;
 }
 
 h1 {
     font-family: 'Press Start 2P', monospace;
-    font-size: 16px;
+    font-size: 18px;
     color: var(--mc-text-yellow);
     text-shadow: 3px 3px 0 #000;
     margin: 0 0 10px 0;
@@ -85,126 +95,144 @@ h1 {
 }
 
 p.subtitle {
-    font-size: 18px;
+    font-size: 20px;
     color: #e0e0e0;
     text-shadow: 2px 2px 0 #000;
     margin: 0;
-    line-height: 1.4;
 }
 
 h2 {
     font-family: 'Press Start 2P', monospace;
-    font-size: 13px;
-    color: #202020;
-    text-shadow: 1px 1px 0 #a0a0a0;
+    font-size: 14px;
+    color: #111;
+    text-shadow: 1px 1px 0 #e0e0e0;
     margin-top: 0;
-    margin-bottom: 18px;
-}
-
-/* NAVIGATION BUTTONS */
-.nav-link {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    display: inline-block;
-    padding: 12px 18px;
-    background: #3c8527;
-    color: #fff;
-    text-decoration: none;
-    border: 3px solid #55ff55;
-    border-right-color: #1e4313;
-    border-bottom-color: #1e4313;
-    outline: 2px solid #000;
     margin-bottom: 20px;
-    text-shadow: 2px 2px 0 #000;
-    transition: background 0.1s;
 }
 
-.nav-link:hover {
-    background: #4ab230;
-}
-
-.nav-link:active {
-    border: 3px solid #1e4313;
-    border-right-color: #55ff55;
-    border-bottom-color: #55ff55;
-}
-
-/* DASHBOARD TOOL GRID */
+/* ENHANCED 3D MINECRAFT BUTTON CARDS */
 .tool-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 18px;
 }
 
 .tool-card {
-    background: var(--mc-slot-bg);
-    border: 4px solid var(--mc-slot-dark);
-    border-right-color: var(--mc-slot-light);
-    border-bottom-color: var(--mc-slot-light);
+    background: #707070;
+    background-image: linear-gradient(180deg, #8b8b8b 0%, #616161 100%);
+    border: 4px solid #ffffff;
+    border-right-color: #373737;
+    border-bottom-color: #373737;
     outline: 2px solid #000;
-    padding: 16px;
+    padding: 18px;
     text-decoration: none;
     color: #fff;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    transition: transform 0.1s ease, background 0.1s ease;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: inset 2px 2px 0 #a0a0a0, inset -2px -2px 0 #2a2a2a;
+    transition: all 0.1s ease;
+    position: relative;
 }
 
 .tool-card:hover {
-    background: #9e9e9e;
-    border-color: #ffffff;
-    border-right-color: var(--mc-slot-dark);
-    border-bottom-color: var(--mc-slot-dark);
-    transform: translateY(-2px);
+    background: #3c8527;
+    background-image: linear-gradient(180deg, #55aa29 0%, #2a5f1b 100%);
+    border-color: #aaffaa;
+    border-right-color: #15330d;
+    border-bottom-color: #15330d;
+    box-shadow: inset 2px 2px 0 #77ff77, inset -2px -2px 0 #102409, 0 0 12px rgba(85, 255, 85, 0.4);
+    transform: translateY(-3px);
 }
 
 .tool-card:active {
-    transform: translateY(0);
-    border: 4px solid var(--mc-slot-dark);
-    border-right-color: var(--mc-slot-light);
-    border-bottom-color: var(--mc-slot-light);
+    transform: translateY(2px);
+    border: 4px solid #373737;
+    border-right-color: #ffffff;
+    border-bottom-color: #ffffff;
+    box-shadow: inset 3px 3px 0 #15330d;
 }
 
 .tool-icon {
-    font-size: 28px;
+    font-size: 30px;
 }
 
 .tool-card h2 {
     font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    color: #fff;
+    font-size: 11px;
+    color: #ffffff;
     text-shadow: 2px 2px 0 #000;
     margin: 0;
 }
 
+.tool-card:hover h2 {
+    color: #ffff55;
+}
+
 .tool-card p {
-    font-size: 18px;
+    font-size: 19px;
     color: #e0e0e0;
     text-shadow: 1px 1px 0 #000;
     margin: 0;
     line-height: 1.2;
 }
 
-/* FORM ELEMENTS */
+/* ENHANCED BACK BUTTON */
+.nav-link {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    display: inline-block;
+    padding: 12px 20px;
+    background: #707070;
+    background-image: linear-gradient(180deg, #8b8b8b 0%, #525252 100%);
+    color: #fff;
+    text-decoration: none;
+    border: 3px solid #ffffff;
+    border-right-color: #222222;
+    border-bottom-color: #222222;
+    outline: 2px solid #000;
+    margin-bottom: 22px;
+    text-shadow: 2px 2px 0 #000;
+    box-shadow: inset 2px 2px 0 #a0a0a0;
+    transition: all 0.1s ease;
+}
+
+.nav-link:hover {
+    background: #3c8527;
+    background-image: linear-gradient(180deg, #4ab230 0%, #285b1a 100%);
+    border-color: #55ff55;
+    border-right-color: #14300d;
+    border-bottom-color: #14300d;
+    color: #ffff55;
+}
+
+.nav-link:active {
+    transform: translateY(2px);
+    border: 3px solid #222222;
+    border-right-color: #ffffff;
+    border-bottom-color: #ffffff;
+}
+
+/* INPUTS AND FORMS */
 .form-group {
-    margin-bottom: 16px;
+    margin-bottom: 18px;
 }
 
 label {
     display: block;
     font-family: 'Press Start 2P', monospace;
     font-size: 9px;
-    color: #202020;
+    color: #111;
     margin-bottom: 8px;
-    text-shadow: 1px 1px 0 #a0a0a0;
+    text-shadow: 1px 1px 0 #fff;
 }
 
 input, select {
     font-family: 'VT323', monospace;
     font-size: 22px;
     width: 100%;
-    padding: 8px 12px;
+    padding: 10px 14px;
     background: #000;
     color: #fff;
     border: 3px solid var(--mc-gui-dark);
@@ -217,7 +245,7 @@ input:focus, select:focus {
     border-color: var(--mc-text-yellow);
 }
 
-/* RESULTS PANEL */
+/* RESULTS DISPLAY PANEL */
 .result-panel {
     background: #000;
     color: var(--mc-text-green);
@@ -225,232 +253,293 @@ input:focus, select:focus {
     border-right-color: var(--mc-gui-light);
     border-bottom-color: var(--mc-gui-light);
     outline: 2px solid #000;
-    padding: 18px;
-    font-size: 20px;
-    margin-top: 20px;
+    padding: 20px;
+    font-size: 22px;
+    margin-top: 22px;
     line-height: 1.8;
 }
 
 .result-panel h3 {
     font-family: 'Press Start 2P', monospace;
     color: #fff;
-    font-size: 10px;
+    font-size: 11px;
     text-shadow: none;
     margin-top: 0;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     border-bottom: 2px dashed #444;
     padding-bottom: 8px;
 }
 
-/* ----------------------------------------------------
-   ANIMATED MINECRAFT MOBS
----------------------------------------------------- */
+/* ====================================================
+   DETAILED ACCURATE MINECRAFT MOBS
+   ==================================================== */
+
 .mob-wrapper {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 100px;
+    height: 160px;
     pointer-events: none;
     z-index: 100;
 }
 
-.pixel-mob {
+/* 1. ACCURATE CREEPER */
+.pixel-mob.creeper {
     position: absolute;
+    right: 35px;
     bottom: 12px;
+    width: 48px;
+    height: 96px;
+    animation: creeperHiss 2.5s ease-in-out infinite;
 }
 
-/* 1. STEVE WALKING */
-.steve {
-    left: -60px;
-    animation: walkRight 20s linear infinite;
-}
-
-.steve-head {
-    width: 18px;
-    height: 18px;
-    background: #c68b59;
-    box-shadow: 
-        0 -4px 0 #4a2f13,
-        -4px 4px 0 #c68b59,
-        4px 4px 0 #000,
-        -2px 2px 0 #fff,
-        2px 2px 0 #fff;
-    margin: 0 auto;
-}
-
-.steve-body {
-    width: 18px;
-    height: 14px;
-    background: #00aaaa;
-    margin: 0 auto;
-}
-
-.steve-legs {
-    width: 14px;
-    height: 10px;
-    background: #0000aa;
-    margin: 0 auto;
-    animation: legSwing 0.4s steps(2) infinite;
-}
-
-/* 2. CREEPER SWELLING */
-.creeper {
-    right: 24px;
-    bottom: 16px;
-    animation: creeperSwell 2s ease-in-out infinite;
-}
-
-.creeper-head {
-    width: 28px;
-    height: 28px;
-    background: #55ff55;
-    border: 3px solid #00aa00;
+.creeper .c-head {
+    width: 48px;
+    height: 48px;
+    background: #388a2a;
+    border: 3px solid #000;
     position: relative;
+    box-shadow: 
+        inset 6px 6px 0 #4db839,
+        inset -6px -6px 0 #235c1a;
 }
 
-.creeper-face {
-    width: 14px;
-    height: 14px;
+.creeper .c-face {
+    width: 24px;
+    height: 30px;
     background: #000;
-    margin: 7px auto;
-    box-shadow: 
-        -4px -2px 0 #000,
-        4px -2px 0 #000,
-        0 4px 0 #000;
-}
-
-/* 3. MC WOLF RUNNING */
-.wolf {
-    left: -140px;
-    animation: walkRight 15s linear infinite;
-    animation-delay: 4s;
-}
-
-.wolf-body {
-    width: 32px;
-    height: 18px;
-    background: #d0d0d0;
-    border: 2px solid #888;
-    position: relative;
-}
-
-.wolf-head {
-    width: 14px;
-    height: 14px;
-    background: #e0e0e0;
     position: absolute;
-    top: -6px;
-    right: -6px;
+    top: 12px;
+    left: 12px;
+    box-shadow: 
+        -6px -6px 0 #000, 
+        6px -6px 0 #000,
+        -6px 0 0 #000,
+        6px 0 0 #000;
 }
 
-.wolf-tail {
-    width: 6px;
+.creeper .c-body {
+    width: 32px;
+    height: 36px;
+    background: #2e7323;
+    border: 3px solid #000;
+    margin: 0 auto;
+    box-shadow: inset 4px 4px 0 #41a132;
+}
+
+.creeper .c-feet {
+    display: flex;
+    justify-content: space-between;
+    width: 40px;
+    margin: 0 auto;
+}
+
+.creeper .c-foot {
+    width: 16px;
+    height: 14px;
+    background: #1e4a16;
+    border: 2px solid #000;
+}
+
+/* 2. ACCURATE WITHER */
+.pixel-mob.wither {
+    position: absolute;
+    top: -140px;
+    right: 10%;
+    width: 140px;
+    height: 110px;
+    animation: witherFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 10px rgba(85, 255, 255, 0.4));
+}
+
+.wither .w-heads {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.wither .w-head {
+    background: #1a1a1a;
+    border: 3px solid #000;
+    position: relative;
+    box-shadow: inset 3px 3px 0 #333;
+}
+
+.wither .w-head.main {
+    width: 44px;
+    height: 44px;
+}
+
+.wither .w-head.side {
+    width: 32px;
+    height: 32px;
+}
+
+.wither .w-eyes {
+    position: absolute;
+    top: 10px;
+    left: 4px;
+    width: 8px;
+    height: 4px;
+    background: #fff;
+    box-shadow: 18px 0 0 #fff;
+}
+
+.wither .w-head.main .w-eyes {
+    top: 14px;
+    left: 6px;
+    width: 10px;
+    height: 6px;
+    box-shadow: 22px 0 0 #fff;
+}
+
+.wither .w-bar {
+    width: 100px;
+    height: 10px;
+    background: #111;
+    border: 2px solid #000;
+    margin: -4px auto 0 auto;
+}
+
+.wither .w-ribs {
+    width: 24px;
+    height: 40px;
+    background: #111;
+    border: 3px solid #000;
+    margin: 0 auto;
+    box-shadow: 
+        -12px 6px 0 #222, 12px 6px 0 #222,
+        -12px 18px 0 #222, 12px 18px 0 #222;
+}
+
+/* 3. ACCURATE MINECRAFT WOLF */
+.pixel-mob.wolf {
+    position: absolute;
+    left: -160px;
+    bottom: 12px;
+    width: 110px;
+    height: 64px;
+    animation: wolfWalk 16s linear infinite;
+}
+
+.wolf .w-main {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.wolf .w-head {
+    width: 32px;
+    height: 32px;
+    background: #d4d4d4;
+    border: 3px solid #000;
+    position: absolute;
+    right: 0;
+    top: -12px;
+    box-shadow: inset 4px 4px 0 #f0f0f0;
+}
+
+.wolf .w-snout {
+    width: 14px;
     height: 12px;
     background: #b0b0b0;
+    border: 2px solid #000;
     position: absolute;
-    top: -2px;
-    left: -6px;
-    transform-origin: bottom right;
-    animation: tailWag 0.3s infinite alternate;
+    right: -10px;
+    bottom: 2px;
 }
 
-/* 4. MC CAT SITTING */
-.cat {
-    right: 90px;
-    bottom: 12px;
+.wolf .w-nose {
+    width: 4px;
+    height: 4px;
+    background: #000;
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
-.cat-body {
-    width: 18px;
-    height: 22px;
-    background: #ffaa00;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
+.wolf .w-ears {
+    position: absolute;
+    top: -8px;
+    left: 2px;
+    width: 6px;
+    height: 8px;
+    background: #a0a0a0;
+    border: 2px solid #000;
+    box-shadow: 16px 0 0 #a0a0a0;
+}
+
+.wolf .w-body {
+    width: 54px;
+    height: 32px;
+    background: #c2c2c2;
+    border: 3px solid #000;
+    margin-left: 20px;
     position: relative;
 }
 
-.cat-head {
-    width: 16px;
-    height: 12px;
-    background: #ffaa00;
+.wolf .w-collar {
+    width: 8px;
+    height: 32px;
+    background: #b82323;
+    border-right: 2px solid #000;
     position: absolute;
-    top: -10px;
-    left: 1px;
+    right: 0;
 }
 
-.cat-eyes {
-    width: 3px;
-    height: 3px;
-    background: #55ff55;
-    box-shadow: 7px 0 0 #55ff55;
-    margin: 3px 3px;
-    animation: catBlink 4s infinite;
-}
-
-/* 5. WITHER FLOATING */
-.wither {
-    top: -120px;
-    right: 12%;
-    animation: floatHover 3s ease-in-out infinite;
-}
-
-.wither-center {
-    width: 18px;
-    height: 18px;
-    background: #222;
-    border: 2px solid #555;
-    margin: 0 auto;
-    position: relative;
-}
-
-.wither-head-side {
-    width: 14px;
-    height: 14px;
-    background: #111;
-    border: 2px solid #444;
+.wolf .w-tail {
+    width: 8px;
+    height: 24px;
+    background: #a8a8a8;
+    border: 2px solid #000;
     position: absolute;
+    left: -8px;
     top: 2px;
+    transform-origin: top right;
+    animation: wolfTail 0.4s ease-in-out infinite alternate;
 }
 
-.wither-head-left { left: -16px; }
-.wither-head-right { right: -16px; }
+.wolf .w-legs {
+    display: flex;
+    justify-content: space-between;
+    width: 48px;
+    margin-left: 24px;
+}
 
-.wither-ribs {
-    width: 28px;
+.wolf .w-leg {
+    width: 10px;
     height: 18px;
-    border-left: 4px solid #333;
-    border-right: 4px solid #333;
-    margin: 2px auto;
+    background: #a8a8a8;
+    border: 2px solid #000;
+    animation: wolfLegs 0.3s steps(2) infinite alternate;
 }
 
 /* ANIMATION KEYFRAMES */
-@keyframes walkRight {
-    0% { left: -80px; }
+@keyframes creeperHiss {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.08); filter: brightness(1.25); }
+    55% { filter: brightness(2) contrast(0.5); }
+    60% { filter: brightness(1.25); }
+}
+
+@keyframes witherFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-18px) rotate(-1deg); }
+}
+
+@keyframes wolfWalk {
+    0% { left: -160px; }
     100% { left: 105vw; }
 }
 
-@keyframes legSwing {
-    0% { transform: skewX(-12deg); }
-    100% { transform: skewX(12deg); }
+@keyframes wolfLegs {
+    0% { transform: skewX(-15deg); }
+    100% { transform: skewX(15deg); }
 }
 
-@keyframes creeperSwell {
-    0%, 100% { transform: scale(1); filter: brightness(1); }
-    50% { transform: scale(1.12); filter: brightness(1.3); }
-}
-
-@keyframes tailWag {
+@keyframes wolfTail {
     0% { transform: rotate(0deg); }
-    100% { transform: rotate(25deg); }
-}
-
-@keyframes catBlink {
-    0%, 90%, 100% { opacity: 1; }
-    95% { opacity: 0; }
-}
-
-@keyframes floatHover {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-16px); }
+    100% { transform: rotate(20deg); }
 }
