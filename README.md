@@ -8,12 +8,12 @@ A retro, pixelated web application built for Minecraft players. It features 7 es
 
 - **🌀 Nether Portal Calculator:** Converts Overworld and Nether coordinates accurately based on the 1:8 dimension ratio.
 - **📦 Build Resource Calculator:** Calculates raw material needs, stacks (64/16/1), double chests, and Shulker box storage requirements.
-- **🔴 Redstone Signal Calculator:** Tracks redstone power loss over block distances and recommends repeater placements.
+- **🔴 Redstone Signal Calculator:** Tracks redstone power loss over block distances and recommends repeater placements and more.
 - **📚 Enchantment Optimizer:** Guides combining order for books in an anvil to minimize prior work penalties and avoid "Too Expensive!".
 - **💀 Mob Farm Yield Estimator:** Estimates hourly XP and item drop rates for Dungeon Spawners, General Mob Towers, and Enderman Farms.
 - **🌾 Villager Discount Tracker:** Tracks emerald price reductions across multiple zombie curing stages.
 - **💎 Beacon Pyramid Planner:** Calculates total blocks and stack counts needed for Levels 1–4 beacon pyramids.
-- **👾 Animated Mobs:** Features custom pixelated CSS animations of Steve, Creeper, Wolf, Cat, and Wither.
+- **👾 Animated Mobs:** Features custom pixelated CSS animations of Creeper, Wolf, and Wither.
 
 ---
 
