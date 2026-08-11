@@ -71,7 +71,7 @@ Start the Express server using `npm start` and open http://localhost:3000 in you
 | `/portal-calculator` | Overworld ↔ Nether coordinate converter |
 | `/resource-calculator` | Storage & stack breakdown calculator |
 | `/redstone-logic` | Signal attenuation & repeater planner |
-| `/enchanting-guide` | Anvil penalty optimization guide |
+| `/enchanting-guide` | Enchaments Order Guide |
 | `/mob-grinder` | Farm yield and XP estimator |
 | `/villager-trades` | Zombie cure discount tracker |
 | `/beacon-planner` | Beacon pyramid material counter |
