@@ -75,3 +75,5 @@ Start the Express server using `npm start` and open http://localhost:3000 in you
 | `/mob-grinder` | Farm yield and XP estimator |
 | `/villager-trades` | Zombie cure discount tracker |
 | `/beacon-planner` | Beacon pyramid material counter |
+
+it feels useless but still fun to work with something new and got learn more minecraft math from here
